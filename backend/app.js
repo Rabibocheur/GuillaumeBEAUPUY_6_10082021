@@ -3,14 +3,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 
+require("dotenv").config();
+
 mongoose
-  .connect(
-    "mongodb+srv://p6:test@cluster0.oya0o.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(process.env.DB_CONNECT, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
