@@ -1,9 +1,11 @@
 const express = require("express");
-
 const mongoose = require("mongoose");
 const path = require("path");
-const helmet = require("helmet");
+const fs = require('fs');
 
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require("helmet");
+const morgan = require('morgan');
 require("dotenv").config();
 
 mongoose
@@ -32,10 +34,12 @@ app.use((req, res, next) => {
 
 const userRoutes = require("./routes/user");
 const sauceRoutes = require("./routes/sauce");
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' }); 
 
 app.use(express.json());
-
+app.use(mongoSanitize());
 app.use(helmet());
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api/auth", userRoutes);
